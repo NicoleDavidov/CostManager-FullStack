@@ -1,0 +1,70 @@
+======== STARTING UNIT TESTS ========
+
+TESTING /api/about
+URL: https://costmanagerserversideproject.onrender.com/api/about
+Status Code: 200
+Response: [{'first_name': 'Nicole', 'last_name': 'Davidov'}, {'first_name': 'Polina', 'last_name': 'Shchulepova'}]
+
+TESTING /api/add (valid)
+URL: https://costmanagerserversideproject.onrender.com/api/add
+Payload: {'userid': 123123, 'description': 'apple', 'category': 'food', 'sum': 5, 'day': 8, 'month': 6, 'year': 2025}
+Status Code: 201
+Response: {'userid': 123123, 'description': 'apple', 'category': 'food', 'sum': 5, 'day': 8, 'month': 6, 'year': 2025, '_id': '6846ce115b68292509e00eb2', '__v': 0}
+
+TESTING /api/add (missing fields)
+URL: https://costmanagerserversideproject.onrender.com/api/add
+Payload: {'userid': 123123, 'category': 'food'}
+Status Code: 400
+Response: {'error': 'Missing info'}
+
+TESTING /api/add (invalid category)
+Payload: {'userid': 123123, 'description': 'unexpected category', 'category': 'vacation', 'sum': 100, 'day': 8, 'month': 6, 'year': 2025}
+Status Code: 500
+Response: {'error': 'Server error', 'message': 'Cost validation failed: category: `vacation` is not a valid enum value for path `category`.'}
+
+TESTING /api/add (invalid date)
+Payload: {'userid': 123123, 'description': 'invalid date', 'category': 'food', 'sum': 10, 'day': 50, 'month': 13, 'year': 2025}
+Status Code: 400
+Response: {'error': 'Invalid date provided'}
+
+TESTING /api/add (negative sum)
+Payload: {'userid': 123123, 'description': 'negative sum', 'category': 'food', 'sum': -100, 'day': 8, 'month': 6, 'year': 2025}
+Status Code: 500
+Response: {'error': 'Server error', 'message': 'Cost validation failed: sum: Path `sum` (-100) is less than minimum allowed value (0).'}
+
+TESTING /api/report
+URL: https://costmanagerserversideproject.onrender.com/api/report?id=123123&year=2025&month=6
+Status Code: 200
+Response: {'userid': 123123, 'year': 2025, 'month': 6, 'costs': [{'food': [{'sum': 10, 'description': 'milk', 'day': 3}, {'sum': 5, 'description': 'apple', 'day': 8}]}, {'health': []}, {'housing': []}, {'sport': []}, {'education': []}]}
+
+TESTING /api/report (missing params)
+URL: https://costmanagerserversideproject.onrender.com/api/report
+Status Code: 400
+Response: {'error': 'Missing required query parameters: id, year, or month'}
+
+TESTING /api/report (non-existing user)
+URL: https://costmanagerserversideproject.onrender.com/api/report?id=000000&year=2025&month=6
+Status Code: 404
+Response: {'error': 'User not found.'}
+
+TESTING /api/report (missing month)
+URL: https://costmanagerserversideproject.onrender.com/api/report?id=123123&year=2025
+Status Code: 400
+Response: {'error': 'Missing required query parameters: id, year, or month'}
+
+TESTING /api/report (invalid type for month)
+URL: https://costmanagerserversideproject.onrender.com/api/report?id=123123&year=2025&month=April
+Status Code: 400
+Response: {'error': 'Query parameters id, year, and month must be valid numbers'}
+
+TESTING /api/users/123123
+URL: https://costmanagerserversideproject.onrender.com/api/users/123123
+Status Code: 200
+Response: {'id': 123123, 'first_name': 'mosh', 'last_name': 'israeli', 'total': 15}
+
+TESTING /api/users/000000 (non-existing user)
+URL: https://costmanagerserversideproject.onrender.com/api/users/000000
+Status Code: 404
+Response: {'error': 'User not found'}
+
+======== END OF TESTS ========
