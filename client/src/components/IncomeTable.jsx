@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import EditableTable from './EditableTable.jsx';
+import { Box, Typography } from '@mui/material';
 
 /**
  * A component for displaying and managing a table of income entries.
@@ -41,8 +42,16 @@ const IncomeTable = ({ incomes, onDelete, onUpdate }) => {
   );
 
   return (
-    <div className="tableContainer">
-      <h2>Income List</h2>
+    <Box sx={{ 
+      padding: { xs: 1, md: 2 },
+      margin: { xs: 1, md: 2 },
+      textAlign: 'center',
+      width: '100%'
+    }}>
+      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+        Income List
+      </Typography>
+      
       {/* Pass the sorted data and columns to the EditableTable component */}
       <EditableTable
         columns={columns}
@@ -50,7 +59,7 @@ const IncomeTable = ({ incomes, onDelete, onUpdate }) => {
         onDelete={onDelete}
         onUpdate={onUpdate}
       />
-    </div>
+    </Box>
   );
 };
 

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import EditableTable from './EditableTable.jsx';
+import { Box, Typography } from '@mui/material';
 import { categories } from '../utils/consts.js';
 
 const ExpensesTable = ({ entries, onDelete, onUpdate }) => {
@@ -28,8 +29,15 @@ const ExpensesTable = ({ entries, onDelete, onUpdate }) => {
   );
 
   return (
-    <div className="tableContainer">
-      <h2>Expenses List</h2>
+    <Box sx={{ 
+      padding: { xs: 1, md: 2 },
+      margin: { xs: 1, md: 2 },
+      textAlign: 'center',
+      width: '100%'
+    }}>
+      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+        Expenses List
+      </Typography>
 
       {/* EditableTable component displays the expenses in a table format */}
       <EditableTable
@@ -38,7 +46,7 @@ const ExpensesTable = ({ entries, onDelete, onUpdate }) => {
         onDelete={onDelete}
         onUpdate={onUpdate}
       />
-    </div>
+    </Box>
   );
 };
 
