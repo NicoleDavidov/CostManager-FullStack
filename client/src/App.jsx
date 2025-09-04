@@ -11,12 +11,16 @@ import {
   Box,
   AppBar,
   Toolbar,
-  Typography
+  Typography,
+  Container,
+  IconButton,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 import IncomeTable from './components/IncomeTable.jsx';
 import AddIncomeForm from './components/AddIncomeForm.jsx';
 import NetIncomeReport from './components/NetIncomeReport.jsx';
-import { ThemeProvider, useTheme } from './components/ThemeProvider.jsx';
+import { ThemeProvider, useTheme as useCustomTheme } from './components/ThemeProvider.jsx';
 import {
   fetchAllCosts,
   fetchAllIncomes,
@@ -39,7 +43,10 @@ function App() {
   const [filterMonth, setFilterMonth] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [isReportOpen, setIsReportOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); // Access theme from context
+  const { theme, toggleTheme } = useCustomTheme();
+  
+  const muiTheme = useTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
 
   // Load all costs and incomes on component mount
   useEffect(() => {
@@ -63,7 +70,6 @@ function App() {
     handleFilter();
   }, [entries, incomes, filterYear, filterMonth, filterCategory]);
 
-  // Function to filter costs and incomes based on user selection
   const handleFilter = () => {
     let filteredCosts = entries;
     let filteredIncomes = incomes;
@@ -97,7 +103,6 @@ function App() {
     setFilteredIncomes(filteredIncomes);
   };
 
-  // Function to handle adding a new cost entry
   const handleAddCost = async (cost) => {
     try {
       await addNewCost(cost);
@@ -108,7 +113,6 @@ function App() {
     }
   };
 
-  // Function to handle adding a new income entry
   const handleAddIncome = async (income) => {
     try {
       await addNewIncome(income);
@@ -119,7 +123,6 @@ function App() {
     }
   };
 
-  // Function to delete a cost entry
   const handleDeleteCost = async (id) => {
     try {
       await deleteCost(id);
@@ -130,7 +133,6 @@ function App() {
     }
   };
 
-  // Function to delete an income entry
   const handleDeleteIncome = async (id) => {
     try {
       await deleteIncome(id);
@@ -141,7 +143,6 @@ function App() {
     }
   };
 
-  // Function to update an existing cost entry
   const handleUpdateCost = async (updatedCost) => {
     try {
       await updateCost(updatedCost.id, { ...updatedCost });
@@ -162,7 +163,6 @@ function App() {
     }
   };
 
-  // Function to update an existing income entry
   const handleUpdateIncome = async (updatedIncome) => {
     try {
       await updateIncome(updatedIncome.id, { ...updatedIncome });
@@ -183,78 +183,134 @@ function App() {
   };
 
   return (
-    <div className="card">
-      {/* Toggle button for switching between dark and light mode */}
-      <button className="theme-toggle" onClick={toggleTheme}>
-        {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
-      </button>
+    <Container 
+      maxWidth={false} 
+      sx={{ 
+        padding: { xs: 1, md: 2 },
+        backgroundColor: 'background.default',
+        minHeight: '100vh'
+      }}
+    >
+      {/* Theme Toggle Button */}
+      <IconButton
+        onClick={toggleTheme}
+        sx={{
+          position: 'fixed',
+          top: { xs: 8, md: 16 },
+          right: { xs: 8, md: 16 },
+          zIndex: 1000,
+          backgroundColor: 'background.paper',
+          border: 1,
+          borderColor: 'divider',
+          fontSize: { xs: '0.8rem', md: '1rem' }
+        }}
+      >
+        {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+      </IconButton>
 
-      {/* Application header */}
-      <AppBar position="static">
-        <Toolbar>
-          <Box sx={{ flexGrow: 1, textAlign: 'center' }}>
-            <Typography variant="h4" color="inherit">
-              Cost Manager App
-            </Typography>
-          </Box>
+      {/* Application Header */}
+      <AppBar 
+        position="static" 
+        sx={{ 
+          borderRadius: 1,
+          mb: 2
+        }}
+      >
+        <Toolbar sx={{ justifyContent: 'center' }}>
+          <Typography 
+            variant={isMobile ? "h5" : "h4"} 
+            color="inherit"
+            sx={{ textAlign: 'center' }}
+          >
+            Cost Manager App
+          </Typography>
         </Toolbar>
       </AppBar>
 
-      {/* Components for adding new cost and income entries */}
-      <AddCostForm onAddCost={handleAddCost} />
-      <AddIncomeForm onAddIncome={handleAddIncome} />
+      {/* Main Content */}
+      <Box sx={{ 
+        backgroundColor: 'background.paper',
+        borderRadius: 2,
+        p: { xs: 1, md: 2 },
+        boxShadow: 1
+      }}>
+        
+        {/* Form Components */}
+        <AddCostForm onAddCost={handleAddCost} />
+        <AddIncomeForm onAddIncome={handleAddIncome} />
 
-      {/* Filter controls for filtering cost and income entries */}
-      <FilterControls
-        filterYear={filterYear}
-        setFilterYear={setFilterYear}
-        filterMonth={filterMonth}
-        setFilterMonth={setFilterMonth}
-        filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
-      />
+        {/* Filter Controls */}
+        <FilterControls
+          filterYear={filterYear}
+          setFilterYear={setFilterYear}
+          filterMonth={filterMonth}
+          setFilterMonth={setFilterMonth}
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
+        />
 
-      {/* Tables displaying filtered cost and income entries */}
-      <IncomeTable
-        incomes={filteredIncomes}
-        onDelete={handleDeleteIncome}
-        onUpdate={handleUpdateIncome}
-      />
-      <ExpensesTable
-        entries={filteredEntries}
-        onDelete={handleDeleteCost}
-        onUpdate={handleUpdateCost}
-      />
+        {/* Tables */}
+        <Box sx={{ mt: 3 }}>
+          <IncomeTable
+            incomes={filteredIncomes}
+            onDelete={handleDeleteIncome}
+            onUpdate={handleUpdateIncome}
+          />
+        </Box>
 
-      {/* Pie chart for cost distribution */}
-      <CategoryPieChart entries={filteredEntries} />
+        <Box sx={{ mt: 3 }}>
+          <ExpensesTable
+            entries={filteredEntries}
+            onDelete={handleDeleteCost}
+            onUpdate={handleUpdateCost}
+          />
+        </Box>
 
-      {/* Button to open the monthly report modal */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setIsReportOpen(true)}
-        style={{ marginTop: '20px' }}
-      >
-        Open Monthly Report
-      </Button>
+        {/* Charts and Reports */}
+        <Box sx={{ mt: 3 }}>
+          <CategoryPieChart entries={filteredEntries} />
+        </Box>
 
-      {/* Net income report */}
-      <NetIncomeReport entries={entries} incomes={incomes} />
+        {/* Report Button */}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          mt: 3 
+        }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setIsReportOpen(true)}
+            size={isMobile ? "small" : "medium"}
+            sx={{ 
+              minWidth: { xs: '200px', md: '250px' },
+              py: { xs: 1, md: 1.5 }
+            }}
+          >
+            Open Monthly Report
+          </Button>
+        </Box>
 
-      {/* Monthly report modal */}
-      <Dialog
-        open={isReportOpen}
-        onClose={() => setIsReportOpen(false)}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle>Monthly Report</DialogTitle>
-        <DialogContent>
-          <MonthlyReport entries={entries} />
-        </DialogContent>
-      </Dialog>
-    </div>
+        {/* Net Income Report */}
+        <Box sx={{ mt: 3 }}>
+          <NetIncomeReport entries={entries} incomes={incomes} />
+        </Box>
+
+        {/* Monthly Report Modal */}
+        <Dialog
+          open={isReportOpen}
+          onClose={() => setIsReportOpen(false)}
+          fullWidth
+          maxWidth="md"
+          fullScreen={isMobile}
+        >
+          <DialogTitle>Monthly Report</DialogTitle>
+          <DialogContent>
+            <MonthlyReport entries={entries} />
+          </DialogContent>
+        </Dialog>
+      </Box>
+    </Container>
   );
 }
 

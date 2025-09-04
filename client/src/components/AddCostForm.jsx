@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Button, MenuItem } from '@mui/material';
-import { categories } from '../utils/consts.js'; // Importing predefined categories
+import { TextField, Button, MenuItem, Box } from '@mui/material';
+import { categories } from '../utils/consts.js';
 
 const AddCostForm = ({ onAddCost }) => {
-  const [amount, setAmount] = useState(''); // State to store the cost amount
-  const [category, setCategory] = useState(''); // State to store the selected category
-  const [description, setDescription] = useState(''); // State to store the description of the cost
-  const [date, setDate] = useState(''); // State to store the date of the cost
-  const [error, setError] = useState(''); // State to store the error message for description
+  const [amount, setAmount] = useState('');
+  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,36 +31,58 @@ const AddCostForm = ({ onAddCost }) => {
     setCategory('');
     setDescription('');
     setDate('');
-    setError(''); // Clear the error after successful submission
+    setError('');
   };
 
   const handleDescriptionChange = (e) => {
     const value = e.target.value;
     if (value.length <= 15) {
       setDescription(value);
-      setError(''); // Clear the error if the length is valid
+      setError('');
     } else {
-      setError('Description cannot exceed 15 characters.'); // Set the error if length exceeds
+      setError('Description cannot exceed 15 characters.');
     }
   };
 
   return (
-    <form className="form" onSubmit={handleSubmit}>
-      <h2>Add an Expense</h2>
+    <Box 
+      component="form" 
+      onSubmit={handleSubmit}
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        gap: 2,
+        alignItems: { xs: 'stretch', md: 'center' },
+        margin: 2,
+        padding: 2,
+        border: '2px solid #ebf5f8',
+        borderRadius: '12px',
+        flexWrap: 'wrap'
+      }}
+    >
+      <h2 style={{ width: '100%', margin: '0 0 16px 0' }}>Add an Expense</h2>
+      
       <TextField
         label="Amount"
         type="number"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
-        fullWidth
+        sx={{ 
+          minWidth: { xs: '100%', md: '150px' },
+          flex: { md: 1 }
+        }}
         required
       />
+      
       <TextField
         select
         label="Category"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
-        fullWidth
+        sx={{ 
+          minWidth: { xs: '100%', md: '150px' },
+          flex: { md: 1 }
+        }}
         required
       >
         {categories.map((cat, index) => (
@@ -69,35 +91,47 @@ const AddCostForm = ({ onAddCost }) => {
           </MenuItem>
         ))}
       </TextField>
+      
       <TextField
         label="Description"
         value={description}
         onChange={handleDescriptionChange}
-        fullWidth
-        error={!!error} // Highlight the input field if there's an error
-        helperText={error} // Display the error message below the input
+        sx={{ 
+          minWidth: { xs: '100%', md: '150px' },
+          flex: { md: 1 }
+        }}
+        error={!!error}
+        helperText={error}
       />
+      
       <TextField
         label="Date"
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        fullWidth
+        sx={{ 
+          minWidth: { xs: '100%', md: '150px' },
+          flex: { md: 1 }
+        }}
         InputLabelProps={{
           shrink: true
         }}
         required
       />
+      
       <Button
         type="submit"
         variant="contained"
         color="primary"
-        fullWidth
-        style={{ marginTop: '20px' }}
+        sx={{ 
+          minWidth: { xs: '100%', md: '120px' },
+          height: '56px',
+          marginTop: { xs: 2, md: 0 }
+        }}
       >
         Add Cost
       </Button>
-    </form>
+    </Box>
   );
 };
 
