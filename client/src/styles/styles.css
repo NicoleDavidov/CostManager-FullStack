@@ -51,29 +51,59 @@ body {
   align-items: center;
 }
 
-/* Card styling */
+/* RESPONSIVE Card styling */
 .card {
   background: var(--container-bg);
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 830px;
+  padding: 10px; /* Smaller padding for mobile */
+  margin: 10px auto;
+  max-width: 100%; /* Full width on mobile */
+  width: 95%; /* Small margins on mobile */
   border-radius: 8px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-/* Table styling */
+/* Tablet and up */
+@media (min-width: 768px) {
+  .card {
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 830px;
+    width: auto;
+  }
+}
+
+/* RESPONSIVE Table styling */
 .table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  font-size: 12px; /* Smaller font on mobile */
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .table {
+    font-size: 14px;
+    display: table;
+    white-space: normal;
+  }
 }
 
 .table th,
 .table td {
-  padding: 10px;
+  padding: 5px 3px; /* Smaller padding on mobile */
   text-align: left;
   border-bottom: 1px solid #000000;
+}
+
+@media (min-width: 768px) {
+  .table th,
+  .table td {
+    padding: 10px;
+  }
 }
 
 .table th {
@@ -90,23 +120,30 @@ body {
   background-color: var(--button-bg);
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 8px 12px; /* Smaller on mobile */
   cursor: pointer;
   border-radius: 4px;
   transition: background 0.3s ease;
+  font-size: 12px;
+}
+
+@media (min-width: 768px) {
+  .btn-primary {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
 }
 
 .btn-primary:hover {
   background-color: var(--button-bg-hover);
 }
 
-/* Form styling */
+/* RESPONSIVE Form styling */
 form {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column; /* Stack vertically on mobile */
   gap: 10px;
-  align-items: center;
-  flex-direction: column;
+  align-items: stretch;
   margin: 15px;
   text-align: left;
   border: 2px solid #ebf5f8; /* Adds a border around the form */
@@ -114,12 +151,31 @@ form {
   padding: 8px;
 }
 
+@media (min-width: 768px) {
+  form {
+    flex-direction: row; /* Horizontal on larger screens */
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}
+
 form input,
 form select,
 form button {
   padding: 8px;
   border-radius: 4px;
-  width: 100%; /* Full-width fields */
+  width: 100%; /* Full-width fields on mobile */
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  form input,
+  form select,
+  form button {
+    width: auto;
+    flex: 1;
+    min-width: 150px;
+  }
 }
 
 /* Toggle button for light/dark mode */
@@ -128,39 +184,85 @@ form button {
   top: 10px;
   right: 10px;
   cursor: pointer;
-  font-size: 17px;
+  font-size: 14px; /* Smaller on mobile */
   background: transparent;
   border: none;
   color: var(--text-color);
-  padding: 8px;
+  padding: 6px;
 }
 
-/* Filter container styling */
+@media (min-width: 768px) {
+  .theme-toggle {
+    font-size: 17px;
+    padding: 8px;
+  }
+}
+
+/* RESPONSIVE Filter container styling */
 .filter-container {
   display: flex;
+  flex-direction: column; /* Stack vertically on mobile */
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  height: 100%;
+  padding: 10px;
   background: var(--background);
+}
+
+@media (min-width: 768px) {
+  .filter-container {
+    flex-direction: row; /* Horizontal on larger screens */
+    align-items: center;
+  }
+}
+
+.filter-container input,
+.filter-container select {
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .filter-container input,
+  .filter-container select {
+    width: auto;
+    min-width: 120px;
+  }
 }
 
 /* Container settings */
 .container {
-  padding: 20px;
-  max-width: 1200px;
+  padding: 10px; /* Less padding on mobile */
+  max-width: 100%;
   margin: auto;
   text-align: center;
 }
 
-/* Styling for AddIncomeForm - Align fields in a row */
+@media (min-width: 768px) {
+  .container {
+    padding: 20px;
+    max-width: 1200px;
+  }
+}
+
+/* RESPONSIVE Styling for AddIncomeForm - Align fields in a row */
 .add-income-form {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column; /* Stack on mobile */
   gap: 10px;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .add-income-form {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
 }
 
 .add-income-form input,
@@ -168,36 +270,98 @@ form button {
 .add-income-form button {
   padding: 8px;
   border-radius: 4px;
-  flex: 1; /* Allows fields to take up full space */
-  min-width: 150px; /* Ensures a minimum width for fields */
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Table Container Styling */
+@media (min-width: 768px) {
+  .add-income-form input,
+  .add-income-form select,
+  .add-income-form button {
+    flex: 1; /* Allows fields to take up full space */
+    width: auto;
+    min-width: 150px; /* Ensures a minimum width for fields */
+  }
+}
+
+/* RESPONSIVE Table Container Styling */
 .tableContainer {
-  padding: 15px;
-  margin: 20px auto;
+  padding: 10px; /* Less padding on mobile */
+  margin: 10px auto;
   text-align: center;
+  overflow-x: auto; /* Allow horizontal scroll on mobile */
+}
+
+@media (min-width: 768px) {
+  .tableContainer {
+    padding: 15px;
+    margin: 20px auto;
+    overflow-x: visible;
+  }
+}
+
+/* RESPONSIVE Editable Table */
+.editableTable {
+  width: 100%;
+  min-width: 500px; /* Minimum width to prevent crushing */
+  font-size: 12px;
+}
+
+@media (min-width: 768px) {
+  .editableTable {
+    min-width: auto;
+    font-size: 14px;
+  }
 }
 
 .editableTable th,
 .editableTable td {
-  padding: 5px;
+  padding: 3px 2px; /* Very compact on mobile */
   text-align: center;
-  max-width: 200px;
+  max-width: 100px; /* Narrower columns on mobile */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: break-word;
 }
 
-/* Buttons inside Editable Table */
+@media (min-width: 768px) {
+  .editableTable th,
+  .editableTable td {
+    padding: 5px;
+    max-width: 200px;
+  }
+}
+
+/* RESPONSIVE Buttons inside Editable Table */
 .editButton,
 .deleteButton,
 .saveButton {
-  padding: 3px 6px;
-  font-size: 12px;
-  margin: 3px;
+  padding: 2px 4px; /* Smaller buttons on mobile */
+  font-size: 10px;
+  margin: 1px;
   cursor: pointer;
   border-radius: 4px;
   transition: background 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .editButton,
+  .deleteButton,
+  .saveButton {
+    padding: 3px 6px;
+    font-size: 12px;
+    margin: 3px;
+  }
+}
+
+/* RESPONSIVE Typography */
+h1, h2, h3 {
+  font-size: 1.2em; /* Smaller headings on mobile */
+}
+
+@media (min-width: 768px) {
+  h1 { font-size: 2em; }
+  h2 { font-size: 1.5em; }
+  h3 { font-size: 1.2em; }
 }
