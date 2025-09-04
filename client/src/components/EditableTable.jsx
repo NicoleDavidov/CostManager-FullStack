@@ -11,12 +11,7 @@ import {
   Button,
   Box,
   TableContainer,
-  Paper,
-  Card,
-  CardContent,
-  Typography,
-  useMediaQuery,
-  useTheme
+  Paper
 } from '@mui/material';
 
 const EditableTable = ({ data, columns, onDelete, onUpdate }) => {
@@ -24,9 +19,6 @@ const EditableTable = ({ data, columns, onDelete, onUpdate }) => {
   const [editData, setEditData] = useState({});
   const [page, setPage] = useState(0);
   const rowsPerPage = 5;
-  
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleEditClick = (row) => {
     setEditId(row.id);
@@ -57,243 +49,279 @@ const EditableTable = ({ data, columns, onDelete, onUpdate }) => {
     page * rowsPerPage + rowsPerPage
   );
 
-  // Mobile Card View
-  if (isMobile) {
-    return (
-      <Box sx={{ width: '100%' }}>
-        {paginatedData.map((row) => (
-          <Card key={row.id} sx={{ mb: 2, p: 1 }}>
-            <CardContent sx={{ p: 2 }}>
-              {editId === row.id ? (
-                // Edit Mode
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  {columns.map((col) => (
-                    <Box key={col.field}>
-                      <Typography variant="caption" color="textSecondary">
-                        {col.headerName}:
-                      </Typography>
-                      {col.type === 'select' ? (
-                        <select
-                          name={col.field}
-                          value={editData[col.field]}
-                          onChange={handleChange}
-                          style={{
-                            width: '100%',
-                            padding: '8px',
-                            marginTop: '4px',
-                            borderRadius: '4px',
-                            border: '1px solid #ccc'
-                          }}
-                        >
-                          {col.options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type={col.type}
-                          name={col.field}
-                          value={editData[col.field]}
-                          onChange={handleChange}
-                          style={{
-                            width: '100%',
-                            padding: '8px',
-                            marginTop: '4px',
-                            borderRadius: '4px',
-                            border: '1px solid #ccc'
-                          }}
-                        />
-                      )}
-                    </Box>
-                  ))}
-                  <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                    <Button
-                      onClick={handleSaveClick}
-                      variant="contained"
-                      color="success"
-                      size="small"
-                      fullWidth
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      onClick={() => setEditId(null)}
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                    >
-                      Cancel
-                    </Button>
-                  </Box>
-                </Box>
-              ) : (
-                // View Mode
-                <Box>
-                  {columns.map((col) => (
-                    <Box key={col.field} sx={{ mb: 1 }}>
-                      <Typography variant="caption" color="textSecondary">
-                        {col.headerName}:
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                        {row[col.field]}
-                      </Typography>
-                    </Box>
-                  ))}
-                  <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
-                    <Button
-                      onClick={() => handleEditClick(row)}
-                      variant="outlined"
-                      color="secondary"
-                      size="small"
-                      fullWidth
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      onClick={() => onDelete(row.id)}
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      fullWidth
-                    >
-                      Delete
-                    </Button>
-                  </Box>
-                </Box>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-        
-        {/* Pagination */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <TablePagination
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPageOptions={[]}
-          />
-        </Box>
-      </Box>
-    );
-  }
-
-  // Desktop Table View
   return (
-    <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
-      <Table className="editableTable" stickyHeader>
-        <TableHead>
-          <TableRow>
-            {columns.map((col) => (
-              <TableCell key={col.field} sx={{ fontWeight: 'bold' }}>
-                {col.headerName}
-              </TableCell>
-            ))}
-            <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {paginatedData.map((row) => (
-            <TableRow key={row.id} hover>
-              {editId === row.id
-                ? columns.map((col) => (
-                    <TableCell key={col.field}>
-                      {col.type === 'select' ? (
-                        <select
-                          name={col.field}
-                          value={editData[col.field]}
-                          onChange={handleChange}
-                          style={{
-                            width: '100%',
-                            padding: '4px',
-                            borderRadius: '4px'
-                          }}
-                        >
-                          {col.options.map((option) => (
-                            <option key={option} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type={col.type}
-                          name={col.field}
-                          value={editData[col.field]}
-                          onChange={handleChange}
-                          style={{
-                            width: '100%',
-                            padding: '4px',
-                            borderRadius: '4px'
-                          }}
-                        />
-                      )}
-                    </TableCell>
-                  ))
-                : columns.map((col) => (
-                    <TableCell key={col.field}>{row[col.field]}</TableCell>
-                  ))}
-              <TableCell>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {editId === row.id ? (
-                    <>
-                      <Button
-                        onClick={handleSaveClick}
-                        variant="contained"
-                        color="success"
-                        size="small"
+    <Box sx={{ width: '100%' }}>
+      {/* Mobile Cards - Hidden on desktop */}
+      <Box sx={{ 
+        display: { xs: 'block', md: 'none' },
+        width: '100%'
+      }}>
+        {paginatedData.map((row) => (
+          <Paper key={row.id} sx={{ 
+            mb: 2, 
+            p: 2,
+            backgroundColor: 'background.paper',
+            border: '1px solid',
+            borderColor: 'divider'
+          }}>
+            {editId === row.id ? (
+              // Edit Mode Card
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {columns.map((col) => (
+                  <Box key={col.field}>
+                    <Box sx={{ 
+                      fontSize: '0.875rem', 
+                      fontWeight: 'bold',
+                      color: 'text.secondary',
+                      mb: 0.5
+                    }}>
+                      {col.headerName}:
+                    </Box>
+                    {col.type === 'select' ? (
+                      <select
+                        name={col.field}
+                        value={editData[col.field]}
+                        onChange={handleChange}
+                        style={{
+                          width: '100%',
+                          padding: '8px',
+                          borderRadius: '4px',
+                          border: '1px solid #ccc',
+                          fontSize: '14px'
+                        }}
                       >
-                        Save
-                      </Button>
-                      <Button
-                        onClick={() => setEditId(null)}
-                        variant="outlined"
-                        size="small"
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    <Button
-                      onClick={() => handleEditClick(row)}
-                      variant="outlined"
-                      color="secondary"
-                      size="small"
-                    >
-                      Edit
-                    </Button>
-                  )}
+                        {col.options.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={col.type}
+                        name={col.field}
+                        value={editData[col.field]}
+                        onChange={handleChange}
+                        style={{
+                          width: '100%',
+                          padding: '8px',
+                          borderRadius: '4px',
+                          border: '1px solid #ccc',
+                          fontSize: '14px'
+                        }}
+                      />
+                    )}
+                  </Box>
+                ))}
+                <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                  <Button
+                    onClick={handleSaveClick}
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    fullWidth
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    onClick={() => setEditId(null)}
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </Box>
+            ) : (
+              // View Mode Card
+              <Box>
+                {columns.map((col) => (
+                  <Box key={col.field} sx={{ 
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    py: 0.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    <Box sx={{ 
+                      fontSize: '0.875rem', 
+                      fontWeight: 'bold',
+                      color: 'text.secondary'
+                    }}>
+                      {col.headerName}:
+                    </Box>
+                    <Box sx={{ 
+                      fontSize: '0.875rem',
+                      fontWeight: 'bold',
+                      textAlign: 'right'
+                    }}>
+                      {row[col.field]}
+                    </Box>
+                  </Box>
+                ))}
+                <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                  <Button
+                    onClick={() => handleEditClick(row)}
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                    sx={{ flex: 1 }}
+                  >
+                    Edit
+                  </Button>
                   <Button
                     onClick={() => onDelete(row.id)}
                     variant="contained"
                     color="error"
                     size="small"
+                    sx={{ flex: 1 }}
                   >
                     Delete
                   </Button>
                 </Box>
-              </TableCell>
+              </Box>
+            )}
+          </Paper>
+        ))}
+      </Box>
+
+      {/* Desktop Table - Hidden on mobile */}
+      <TableContainer 
+        component={Paper} 
+        sx={{ 
+          width: '100%', 
+          overflowX: 'auto',
+          display: { xs: 'none', md: 'block' }
+        }}
+      >
+        <Table className="editableTable" stickyHeader>
+          <TableHead>
+            <TableRow>
+              {columns.map((col) => (
+                <TableCell key={col.field} sx={{ fontWeight: 'bold' }}>
+                  {col.headerName}
+                </TableCell>
+              ))}
+              <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPageOptions={[]}
-              colSpan={columns.length + 1}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {paginatedData.map((row) => (
+              <TableRow key={row.id} hover>
+                {editId === row.id
+                  ? columns.map((col) => (
+                      <TableCell key={col.field}>
+                        {col.type === 'select' ? (
+                          <select
+                            name={col.field}
+                            value={editData[col.field]}
+                            onChange={handleChange}
+                            style={{
+                              width: '100%',
+                              padding: '4px',
+                              borderRadius: '4px'
+                            }}
+                          >
+                            {col.options.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type={col.type}
+                            name={col.field}
+                            value={editData[col.field]}
+                            onChange={handleChange}
+                            style={{
+                              width: '100%',
+                              padding: '4px',
+                              borderRadius: '4px'
+                            }}
+                          />
+                        )}
+                      </TableCell>
+                    ))
+                  : columns.map((col) => (
+                      <TableCell key={col.field}>{row[col.field]}</TableCell>
+                    ))}
+                <TableCell>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    {editId === row.id ? (
+                      <>
+                        <Button
+                          onClick={handleSaveClick}
+                          variant="contained"
+                          color="success"
+                          size="small"
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          onClick={() => setEditId(null)}
+                          variant="outlined"
+                          size="small"
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        onClick={() => handleEditClick(row)}
+                        variant="outlined"
+                        color="secondary"
+                        size="small"
+                      >
+                        Edit
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => onDelete(row.id)}
+                      variant="contained"
+                      color="error"
+                      size="small"
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPageOptions={[]}
+                colSpan={columns.length + 1}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+
+      {/* Pagination for mobile */}
+      <Box sx={{ 
+        display: { xs: 'flex', md: 'none' },
+        justifyContent: 'center', 
+        mt: 2 
+      }}>
+        <TablePagination
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPageOptions={[]}
+        />
+      </Box>
+    </Box>
   );
 };
 
