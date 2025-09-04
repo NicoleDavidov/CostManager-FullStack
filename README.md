@@ -9,7 +9,7 @@ Cost Manager is a full-stack application for managing personal and business expe
 ## Live Demo
 
 - **Repository**: [https://github.com/NicoleDavidov/CostManager-FullStack](https://github.com/NicoleDavidov/CostManager-FullStack)
-- **Frontend Demo**: Coming soon on Vercel
+- **Link**: [Chttps://cost-manager-fullstack.vercel.app/l](https://cost-manager-fullstack.vercel.app/)
 
 ## Project Structure
 
